@@ -5,10 +5,7 @@
     "angular": "*",
     "angular-route": "*",
     "angular-local-storage" : "*",
-    "noty": "*",
     "jquery": "*",
-    "bootstrap": "*",
-    "cryptojslib" : "*",
     "requirejs" : "*"
   },
   "private": true,
