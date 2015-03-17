@@ -9,7 +9,5 @@ $(document).ready(function() {
 			
 			function() {
 				// callback function
-				//testcabecao de cobra
-//adsds
 			});
 });	
