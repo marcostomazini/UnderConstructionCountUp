@@ -1,0 +1,81 @@
+{
+	"id": 544,
+	"buildTypeId": "Develop_TreetechSamDevDB1",
+	"number": "2.3.6454.203",
+	"status": "SUCCESS",
+	"state": "finished",
+	"href": "/guestAuth/app/rest/builds/id:544",
+	"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=544&buildTypeId=Develop_TreetechSamDevDB1",
+	"statusText": "Tests passed: 39",
+	"buildType": {
+		"id": "Develop_TreetechSamDevDB1",
+		"name": "Treetech.SAM",
+		"projectName": "Develop",
+		"projectId": "Develop",
+		"href": "/guestAuth/app/rest/buildTypes/id:Develop_TreetechSamDevDB1",
+		"webUrl": "http://svrhomtreetech:8080/viewType.html?buildTypeId=Develop_TreetechSamDevDB1"
+	},
+	"tags": {
+		"tag": []
+	},
+	"queuedDate": "20150318T080242-0300",
+	"startDate": "20150318T080242-0300",
+	"finishDate": "20150318T080351-0300",
+	"triggered": {
+		"type": "vcs",
+		"details": "tfs",
+		"date": "20150318T080242-0300"
+	},
+	"lastChanges": {
+		"count": 1,
+		"change": [{
+			"id": 225,
+			"version": "6454",
+			"username": "cpro8799\\rodrigofernandes",
+			"date": "20150318T080153-0300",
+			"href": "/guestAuth/app/rest/changes/id:225",
+			"webLink": "http://svrhomtreetech:8080/viewModification.html?modId=225&personal=false"
+		}]
+	},
+	"changes": {
+		"count": 1,
+		"href": "/guestAuth/app/rest/changes?locator=build:(id:544)"
+	},
+	"revisions": {
+		"revision": [{
+			"version": "6454",
+			"vcs-root-instance": {
+				"id": "4",
+				"vcs-root-id": "Develop_Develop",
+				"name": "Develop",
+				"href": "/guestAuth/app/rest/vcs-root-instances/id:4"
+			}
+		}]
+	},
+	"agent": {
+		"id": 1,
+		"name": "svrhomtreetech",
+		"typeId": 1,
+		"href": "/guestAuth/app/rest/agents/id:1"
+	},
+	"testOccurrences": {
+		"count": 39,
+		"href": "/guestAuth/app/rest/testOccurrences?locator=build:(id:544)",
+		"passed": 39,
+		"default": false
+	},
+	"artifacts": {
+		"href": "/guestAuth/app/rest/builds/id:544/artifacts/children"
+	},
+	"relatedIssues": {
+		"href": "/guestAuth/app/rest/builds/id:544/relatedIssues"
+	},
+	"properties": {
+		"count": 6,
+		"property": [{
+			"name": "env.Configuration",
+			"value": "DevDB1"
+		},
+		{
+			"name": "env.SiteName",
+			"value": "\"Sigma AAM Dev\""},{"name":"env.UrlDeploy","value":"https: //192.168.170.90: 8172"},{"name":"fase","value":"2"},{"name":"sprint","value":"3"},{"name":"system.MSTest.11.0","value":"C: \\ProgramFiles(x86)\\MicrosoftVisualStudio11.0\\Common7\\IDE\\MSTest.exe"}]},"statistics":{"href":"/guestAuth/app/rest/builds/id: 544/statistics"}}

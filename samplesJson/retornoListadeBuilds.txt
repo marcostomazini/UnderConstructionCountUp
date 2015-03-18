@@ -1,0 +1,50 @@
+{
+	"count": 5,
+	"href": "/guestAuth/app/rest/buildTypes/id:Develop_TreetechSamDevDB1/builds/?count=5&start=0",
+	"nextHref": "/guestAuth/app/rest/buildTypes/id:Develop_TreetechSamDevDB1/builds/?count=5&start=5",
+	"build": [{
+		"id": 545,
+		"buildTypeId": "Develop_TreetechSamDevDB1",
+		"number": "2.3.6457.204",
+		"status": "SUCCESS",
+		"state": "finished",
+		"href": "/guestAuth/app/rest/builds/id:545",
+		"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=545&buildTypeId=Develop_TreetechSamDevDB1"
+	},
+	{
+		"id": 544,
+		"buildTypeId": "Develop_TreetechSamDevDB1",
+		"number": "2.3.6454.203",
+		"status": "SUCCESS",
+		"state": "finished",
+		"href": "/guestAuth/app/rest/builds/id:544",
+		"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=544&buildTypeId=Develop_TreetechSamDevDB1"
+	},
+	{
+		"id": 538,
+		"buildTypeId": "Develop_TreetechSamDevDB1",
+		"number": "2.3.6453.202",
+		"status": "SUCCESS",
+		"state": "finished",
+		"href": "/guestAuth/app/rest/builds/id:538",
+		"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=538&buildTypeId=Develop_TreetechSamDevDB1"
+	},
+	{
+		"id": 533,
+		"buildTypeId": "Develop_TreetechSamDevDB1",
+		"number": "2.3.6452.201",
+		"status": "SUCCESS",
+		"state": "finished",
+		"href": "/guestAuth/app/rest/builds/id:533",
+		"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=533&buildTypeId=Develop_TreetechSamDevDB1"
+	},
+	{
+		"id": 532,
+		"buildTypeId": "Develop_TreetechSamDevDB1",
+		"number": "2.3.6451.200",
+		"status": "SUCCESS",
+		"state": "finished",
+		"href": "/guestAuth/app/rest/builds/id:532",
+		"webUrl": "http://svrhomtreetech:8080/viewLog.html?buildId=532&buildTypeId=Develop_TreetechSamDevDB1"
+	}]
+}
