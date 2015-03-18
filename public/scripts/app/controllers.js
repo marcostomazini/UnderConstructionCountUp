@@ -3,22 +3,30 @@ define(['angular'], function (angular) {
 
     var mainAppControllers = angular.module('mainAppControllers', ['timer']);
 
-    mainAppControllers.controller('HomeCtrl', ['$scope', '$http',
-        function ($scope, $http) {
+    mainAppControllers.controller('HomeCtrl', ['$scope', '$http', '$interval',
+        function ($scope, $http,$interval) {
 
-            $scope.startTime = 1426384502000; // miliseconds - http://www.timestampconvert.com/
+            $interval( function(){                 
+                $scope.callTeamCity()              
+            }, 60000);
 
-            // $http({method: 'GET', url: '/api/things'}).
-            //     success(function(data, status, headers, config) {
-            //         $scope.things = data.things;
-            //     }).
-            //     error(function(data, status, headers, config) {
+            var now = Date.now();
+            $scope.startTime = now; // miliseconds - http://www.timestampconvert.com/
 
-            //         if(status!==401){
-            //             noty({text: data,  timeout: 2000, type: 'error'});
-            //         }
-            //     });
+            $scope.callTeamCity = function() {
+                $scope.startTime = Date.now(); 
 
+                // 20150314T203837+0000 DATA QUE VEM DO TEAMCITY CONVERTER PARA MILISEGUNDOS
+                // moment('2015-03-14 20:38:37')
+
+                // $http({method: 'GET', url: 'http://ci.signalr.net/guestAuth/app/rest/buildTypes/id:bt116/builds/running:false,status:success'}).
+                //     success(function(data, status, headers, config) {
+                //         console.log('sucess');
+                //     }).
+                //     error(function(data, status, headers, config) {
+                //        console.log('error');
+                //     });
+            };
         }
     ]);
 

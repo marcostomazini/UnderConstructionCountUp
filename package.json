@@ -5,6 +5,7 @@
     "main" : "views/index.html",
     "dependencies": {
         "express": "~3.2.6",
+        "cors": "*",
         "ejs": "~0.7.1",
         "connect-flash" : "*",
         "requirejs" : "*"

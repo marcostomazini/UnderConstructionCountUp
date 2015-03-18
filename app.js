@@ -5,13 +5,13 @@ var express  = require('express');
 var flash    = require('connect-flash');
 var http = require('http');
 var path = path = require('path');
+var cors = require('cors');
 
 var vhost = 'nodejsapp.local'
 var port     = process.env.PORT || 3000;
 var ip     = process.env.IP || "localhost";
 
 var app = express();
-
 
 app.configure(function() {
     // set up our express application
@@ -31,7 +31,7 @@ app.configure(function() {
 
     //provagg
     app.use(app.router); //init routing
-
+    app.use(cors());
 });
 
 require('./app/routes.js')(app); // load our routes and pass in our app and fully configured passport
