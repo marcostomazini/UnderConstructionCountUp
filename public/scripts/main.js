@@ -6,7 +6,10 @@ require.config({
         'angular' :'angular/angular.min',
         'angularRoute' : 'angular-route/angular-route.min',
         'angularLocalStorage' : 'angular-local-storage/dist/angular-local-storage.min',
-        'jquery' : 'jquery/dist/jquery.min'
+        'jquery' : 'jquery/dist/jquery.min',
+        'angularTimer': 'angular-timer/dist/angular-timer.min',
+        'moment': 'momentjs/min/moment.min',
+        'humanizeDuration': 'humanize-duration/humanize-duration'
     },
     shim: {
         'angular': {
@@ -19,12 +22,16 @@ require.config({
         'angularLocalStorage' :{
             deps: ['angular'],
             exports : 'angularLocalStorage'
-        }      
+        },
+        'angularTimer':{
+            deps: ['angular'],
+            exports : 'angularTimer'
+        }
     }
 });
 
 
-require(['require','angular','angularRoute','angularLocalStorage','app'], function () {
+require(['require','angular','angularRoute','angularLocalStorage','app','angularTimer','moment','humanizeDuration'], function () {
     angular.element(document).ready(function() {
         angular.bootstrap(document, ['mainApp']);
     });

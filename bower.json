@@ -1,12 +1,13 @@
 {
-  "name": "app",
-  "version": "0.0.2",
+  "name": "under-construction",
+  "version": "0.0.1",
   "dependencies": {
     "angular": "*",
     "angular-route": "*",
     "angular-local-storage" : "*",
     "jquery": "*",
-    "requirejs" : "*"
+    "requirejs" : "*",
+    "angular-timer": "*"
   },
   "private": true,
   "ignore": [

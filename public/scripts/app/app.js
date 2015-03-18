@@ -3,8 +3,7 @@ define([
     'angular',
     'angularRoute',
     'angularLocalStorage',
-    'controllers',
-    'services'
+    'controllers'
 
 ], function (angular) {
     'use strict';
@@ -12,10 +11,8 @@ define([
     var mainApp =  angular.module('mainApp', [
         'LocalStorageModule',
         'ngRoute',
-        'myAppServices',
         'mainAppControllers'
     ]);
-
 
     mainApp.config(['$routeProvider',
         function($routeProvider) {
@@ -29,11 +26,9 @@ define([
                     redirectTo: '/home'
                 });
         }
-
     ]);
 
-
-    mainApp.run(['$rootScope','$location','AuthenticationService',function($rootScope, $location, AuthenticationService) {
+    mainApp.run(['$rootScope','$location',function($rootScope, $location) {
         $rootScope.$on("$routeChangeStart", function(event, nextRoute, currentRoute) {
 
             if (nextRoute.access===undefined) {
@@ -43,8 +38,6 @@ define([
     }]);
 
     return mainApp;
-
-
 });
 
 
