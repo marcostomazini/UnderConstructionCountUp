@@ -6,6 +6,8 @@ define(['angular'], function (angular) {
     mainAppControllers.controller('HomeCtrl', ['$scope', '$http', '$interval',
         function ($scope, $http,$interval) {
 
+            $scope.url = "http://svrhomtreetech:8080";
+
             $interval( function(){                 
                 $scope.callTeamCity()              
             }, 60000);
@@ -13,19 +15,49 @@ define(['angular'], function (angular) {
             var now = Date.now();
             $scope.startTime = now; // miliseconds - http://www.timestampconvert.com/
 
+            $scope.getLastFailure = function (buidList) {
+
+                var buildFailure = _.find(buidList,function(build){ return build.status == "FAILURE"});
+
+                if(buildFailure){
+                    $scope.getBuildFailure(buildFailure);
+                }                
+            };
+            
+            $scope.getBuildFailure =  function(buildFailure){
+
+                var time = Date.now();
+
+                $http({
+                    method: 'GET', 
+                    url: $scope.url + buildFailure.href
+                }).success(function(data, status, headers, config) {
+                    $scope.startTime = $scope.formatMillisecondsToDateTime(data.startDate);
+                }).error(function(data, status, headers, config) {
+                    return null;
+                });
+
+                return time;
+            }
+
+            $scope.formatMillisecondsToDateTime = function(time){
+
+                var momentDate = moment(time, "YYYYMMDD hh:mm:ss")
+
+                var date = new Date (momentDate);
+
+                return date.getTime();
+            }
+
             $scope.callTeamCity = function() {
-                $scope.startTime = Date.now(); 
-
-                // 20150314T203837+0000 DATA QUE VEM DO TEAMCITY CONVERTER PARA MILISEGUNDOS
-                // moment('2015-03-14 20:38:37')
-
-                // $http({method: 'GET', url: 'http://ci.signalr.net/guestAuth/app/rest/buildTypes/id:bt116/builds/running:false,status:success'}).
-                //     success(function(data, status, headers, config) {
-                //         console.log('sucess');
-                //     }).
-                //     error(function(data, status, headers, config) {
-                //        console.log('error');
-                //     });
+                $http({
+                    method: 'GET', 
+                    url: $scope.url + '/guestAuth/app/rest/buildTypes/id:Develop_TreetechSamDevDB1/builds/?count=500&start=0'
+                }).success(function(data, status, headers, config) {
+                    $scope.getLastFailure(data.build);
+                }).error(function(data, status, headers, config) {
+                    console.log('error');
+                });
             };
         }
     ]);

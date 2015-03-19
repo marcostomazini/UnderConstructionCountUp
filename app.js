@@ -28,10 +28,14 @@ app.configure(function() {
     app.use(express.json());
     app.use(express.urlencoded());
     //app.use(flash()); // use connect-flash for flash messages stored in session
+   
 
     //provagg
     app.use(app.router); //init routing
     app.use(cors());
+
+    
+
 });
 
 require('./app/routes.js')(app); // load our routes and pass in our app and fully configured passport

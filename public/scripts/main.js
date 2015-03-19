@@ -9,7 +9,8 @@ require.config({
         'jquery' : 'jquery/dist/jquery.min',
         'angularTimer': 'angular-timer/dist/angular-timer.min',
         'moment': 'momentjs/min/moment.min',
-        'humanizeDuration': 'humanize-duration/humanize-duration'
+        'humanizeDuration': 'humanize-duration/humanize-duration',
+        'underscore':  'underscore/underscore-min'
     },
     shim: {
         'angular': {
@@ -31,7 +32,7 @@ require.config({
 });
 
 
-require(['require','angular','angularRoute','angularLocalStorage','app','angularTimer','moment','humanizeDuration'], function () {
+require(['require','angular','angularRoute','angularLocalStorage','app','angularTimer','moment','humanizeDuration','underscore'], function () {
     angular.element(document).ready(function() {
         angular.bootstrap(document, ['mainApp']);
     });
