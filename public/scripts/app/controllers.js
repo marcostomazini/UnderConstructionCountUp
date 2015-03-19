@@ -7,9 +7,9 @@ define(['angular'], function (angular) {
         function ($scope, $http,$interval) {
 
             $scope.url = "http://svrhomtreetech:8080";
-
+			
             $interval( function(){                 
-                $scope.callTeamCity()              
+                $scope.callTeamCity();
             }, 60000);
 
             var now = Date.now();
@@ -59,6 +59,7 @@ define(['angular'], function (angular) {
                     console.log('error');
                 });
             };
+			$scope.callTeamCity();
         }
     ]);
 
