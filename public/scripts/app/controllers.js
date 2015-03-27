@@ -17,11 +17,12 @@ define(['angular'], function (angular) {
 
             $scope.getLastFailure = function (buidList) {
 
-                var buildFailure = _.find(buidList,function(build){ return build.status == "FAILURE"});
+                return _.find(buidList,function(build){ return build.status == "FAILURE"});                
+            };
 
-                if(buildFailure){
-                    $scope.getBuildFailure(buildFailure);
-                }                
+            $scope.getLastBuild = function (buidList) {
+
+                return buidList[0];
             };
             
             $scope.getBuildFailure =  function(buildFailure){
@@ -47,6 +48,32 @@ define(['angular'], function (angular) {
                 var date = new Date (momentDate);
 
                 return date.getTime();
+            }
+
+            $scope.showFailureError = function(){
+
+            }
+
+            $scope.teste = function(){
+                return "teste";
+            }
+
+            $scope.verifyBuild = function(buildList){
+
+                var buildFailure = $scope.getLastFailure(buidList);                
+
+                if(buildFailure){
+
+                    var lastBuild = $scope.getLastBuild(build);
+
+                    if(buildFailure.Id == lastBuild.Id){
+                        $scope.showFailureError();
+                    }
+                    else
+                    {
+                        $scope.getBuildFailure(buildFailure);
+                    }                    
+                }                
             }
 
             $scope.callTeamCity = function() {
