@@ -31,7 +31,7 @@ define(['angular'], function (angular) {
 			
             $interval( function(){          
                 $scope.callTeamCity();
-            }, 6000);
+            }, 60000);
 
             var now = Date.now();
             $scope.startTime = now; // miliseconds - http://www.timestampconvert.com/
