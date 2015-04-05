@@ -3,25 +3,44 @@ define(['angular'], function (angular) {
 
     var mainAppControllers = angular.module('mainAppControllers', ['timer']);
 
+    mainAppControllers.controller('IndexCtrl', ['$scope', '$http', '$interval',
+        function ($scope, $http,$interval) {
+            $scope.isError = false;
+
+            $scope.$on('blinkError', function(param, blink) { 
+                if (blink) {
+                    $scope.isError = true;
+                } else {
+                    $scope.isError = false;
+                }
+            });
+        }
+    ]);
+
     mainAppControllers.controller('HomeCtrl', ['$scope', '$http', '$interval',
         function ($scope, $http,$interval) {
+            $scope.isError = false;
+
+            $scope.buildError = function(isError){
+                $scope.isError = isError;
+                $scope.$emit('blinkError', isError); // ativa = true
+                //$scope.$emit('blinkError', false); // desativa = false
+            }
 
             $scope.url = "http://svrhomtreetech:8080";
 			
-            $interval( function(){                 
+            $interval( function(){          
                 $scope.callTeamCity();
-            }, 60000);
+            }, 6000);
 
             var now = Date.now();
             $scope.startTime = now; // miliseconds - http://www.timestampconvert.com/
 
             $scope.getLastFailure = function (buidList) {
-
                 return _.find(buidList,function(build){ return build.status == "FAILURE"});                
             };
 
             $scope.getLastBuild = function (buidList) {
-
                 return buidList[0];
             };
             
@@ -51,11 +70,7 @@ define(['angular'], function (angular) {
             }
 
             $scope.showFailureError = function(){
-
-            }
-
-            $scope.teste = function(){
-                return "teste";
+                $scope.buildError(true);
             }
 
             $scope.verifyBuild = function(buildList){

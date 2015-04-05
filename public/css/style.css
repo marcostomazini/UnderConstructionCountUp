@@ -149,3 +149,25 @@ ul#countdown li p.timeRefSeconds {
 		font-size: 3em;
 	}
 }
+ 
+.blink {
+  animation: blink 1s steps(1, start) infinite;
+  animation-direction: alternate;
+  -webkit-animation: blink 0.4s steps(3, start) infinite;
+}
+@keyframes blink {
+    from {
+        background:red;
+    }
+    to {
+        background:white;
+    }
+}
+@-webkit-keyframes blink {
+    from {
+        background:white;
+    }
+    to {
+        background:red;
+    }
+}

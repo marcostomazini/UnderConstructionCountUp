@@ -1,5 +1,6 @@
-<div class="wrap">
-	<div class="content">
+<!-- show div ok compilacoes -->
+<div class="wrap" ng-show="!isError">
+	<div class="content">		
 		<h1>Estamos trabalhando ha</h1>
 	</div>
 		<timer start-time="startTime">
@@ -29,4 +30,11 @@
 	<div class="content clear" style="margin-top: 30px">
 		<h1>sem quebras de compilacao</h1>
 	</div>				
+</div>
+
+<!-- show div quebrado -->
+<div class="wrap" ng-show="isError">
+	<div class="content">
+		<h1>Estamos trabalhando quebrado</h1>
+	</div>
 </div>
