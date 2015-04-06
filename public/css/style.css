@@ -171,11 +171,11 @@ ul#countdown li p.timeRefSeconds {
 }
 
 .blinkError {
-  animation: blink 1s steps(1, start) infinite;
+  animation: blinkError 1s steps(1, start) infinite;
   animation-direction: alternate;
-  -webkit-animation: blink 0.4s steps(3, start) infinite;
+  -webkit-animation: blinkError 0.4s steps(3, start) infinite;
 }
-@keyframes blink {
+@keyframes blinkError {
     from {
         background:red;
     }
@@ -183,7 +183,7 @@ ul#countdown li p.timeRefSeconds {
         background:white;
     }
 }
-@-webkit-keyframes blink {
+@-webkit-keyframes blinkError {
     from {
         background:white;
     }

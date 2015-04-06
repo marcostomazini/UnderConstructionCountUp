@@ -37,7 +37,9 @@ define(['angular'], function (angular) {
             $scope.startTime = now; // miliseconds - http://www.timestampconvert.com/
 
             $scope.getLastFailure = function (buidList) {
-                return _.find(buidList,function(build){ return build.status == "FAILURE"});                
+                return _.find(buidList,function(build){ 
+					return build.status == "FAILURE"
+				});                
             };
 
             $scope.getLastBuild = function (buidList) {
@@ -75,11 +77,11 @@ define(['angular'], function (angular) {
 
             $scope.verifyBuild = function(buildList){
 
-                var buildFailure = $scope.getLastFailure(buidList);                
+                var buildFailure = $scope.getLastFailure(buildList);                
 
                 if(buildFailure){
 
-                    var lastBuild = $scope.getLastBuild(build);
+                    var lastBuild = $scope.getLastBuild(buildList);
 
                     if(buildFailure.Id == lastBuild.Id){
                         $scope.showFailureError();
@@ -94,9 +96,10 @@ define(['angular'], function (angular) {
             $scope.callTeamCity = function() {
                 $http({
                     method: 'GET', 
-                    url: $scope.url + '/guestAuth/app/rest/buildTypes/id:Develop_TreetechSamDevDB1/builds/?count=500&start=0'
+                    url: $scope.url + '/guestAuth/app/rest/buildTypes/id:Develop_Publish_ServicoWeb/builds/?count=500&start=0'
                 }).success(function(data, status, headers, config) {
-                    $scope.getLastFailure(data.build);
+                    //$scope.getLastFailure(data.build);
+					$scope.verifyBuild(data.build);
                 }).error(function(data, status, headers, config) {
                     console.log('error');
                 });
