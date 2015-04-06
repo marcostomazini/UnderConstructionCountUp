@@ -28,6 +28,7 @@ define(['angular'], function (angular) {
             }
 
             $scope.url = "http://svrhomtreetech:8080";
+			$scope.projectId = "Develop_Publish_ServicoWeb";
 			
             $interval( function(){          
                 $scope.callTeamCity();
@@ -83,7 +84,7 @@ define(['angular'], function (angular) {
 
                     var lastBuild = $scope.getLastBuild(buildList);
 
-                    if(buildFailure.Id == lastBuild.Id){
+                    if(buildFailure.id == lastBuild.id){
                         $scope.showFailureError();
                     }
                     else
@@ -96,7 +97,7 @@ define(['angular'], function (angular) {
             $scope.callTeamCity = function() {
                 $http({
                     method: 'GET', 
-                    url: $scope.url + '/guestAuth/app/rest/buildTypes/id:Develop_Publish_ServicoWeb/builds/?count=500&start=0'
+                    url: $scope.url + '/guestAuth/app/rest/buildTypes/id:'+ $scope.projectId +'/builds/?count=500&start=0'
                 }).success(function(data, status, headers, config) {
                     //$scope.getLastFailure(data.build);
 					$scope.verifyBuild(data.build);
