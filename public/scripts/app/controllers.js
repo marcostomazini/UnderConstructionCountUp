@@ -28,7 +28,7 @@ define(['angular'], function (angular) {
             }
 
             $scope.url = "http://svrhomtreetech:8080";
-			$scope.projectId = "Develop_Publish_ServicoWeb";
+			$scope.projectId = "Develop_TreetechSamDevDB1";
 			
             $interval( function(){          
                 $scope.callTeamCity();
