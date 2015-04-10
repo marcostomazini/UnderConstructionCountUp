@@ -4,7 +4,7 @@ module.exports = function(app) {
         res.render('index');
     });
 
-	app.get('/wilde', function(req, res){
+	app.get('/burndown', function(req, res){
         res.render('wilde/index');
     });
 
