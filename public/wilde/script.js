@@ -6,6 +6,7 @@ $(function(){
 	addConfig();
 
     getTrelloData(function(data){
+        console.log(data);
         var chartData = {
             aam: {
                 workDays: []
@@ -165,6 +166,7 @@ var membersInitialize = function(members){
 };
 
 var getPointsSum = function(cards){
+
     var soma = 0.0;
     var buffer;
     for (var i = 0; i < cards.length; i++){
@@ -288,6 +290,7 @@ var getBurndownCards = function(allCards, label_burn){
             retorno.push(card);
         }
     });
+
 
     return retorno;
 };
@@ -438,7 +441,7 @@ var getTrelloData = function(callback){
 
 var getUrlTrelloApi = function(){
     var board_id = config.sprintConfig.url_trello.split('/')[4];
-    var urlString = "https://api.trello.com/1/board/"+ board_id +"?key="+ config.sysConfig.key_trello +"&cards=open&lists=open&members=all&member_fields=fullName&token=" + config.sysConfig.token_trello
+    var urlString = "https://api.trello.com/1/board/"+ board_id +"?key="+ config.sysConfig.key_trello +"&cards=visible&lists=open&members=all&member_fields=fullName&token=" + config.sysConfig.token_trello
     return urlString;
 };
 
