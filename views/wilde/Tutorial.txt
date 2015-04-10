@@ -1,0 +1,79 @@
+Tutorial de configuração do gerador de Burndown:
+
+1-) Configuração do sistema (alteradas apenas uma vez por projeto):
+
+	1.a) Trazer indicadores na tela:
+
+		1.a.1) Abrir o arquivo index.html com o editor de texto de sua preferência;
+
+		1.a.2) Dentro da tag "embed", incluir o link que hospeda seus indicadores dentro de src="SUBSTITUA TODO O TEXTO ENTRE ASPAS COM O LINK DOS SEUS INDICADORES". Um exemplo da tag "embed" completa é: <embed id="indicadores" src="http://192.168.199.98:8081/Charts/GetChart?chart=GAZIN_INDICADORES_PORTAL&query=QRY_SERRANO_IND_REQUISITOS"/>
+
+		1.a.3) Caso você não possua o link dos indicadores, apague toda a tag "embed";
+
+		1.a.4) Salvar documento e sair.
+
+	1.b) Configurações globais:
+
+		1.b.1) Abrir arquivo config.js com o editor de texto de sua preferência;
+
+		1.b.2) Informar o nome da equipe no atributo "nome_da_equipe". Exemplo(nome_da_equipe: 'Nome da equipe')
+
+		1.b.3) Informar a cor_de_fundo_do_titulo em hexadecimal, sem o #. Exemplo(,cor_de_fundo_do_titulo: '1FBF2C')
+
+		1.b.4) Informar a cor_de_fundo_da_tela em hexadecimal, sem o #. Exemplo(,cor_de_fundo_da_tela: 'FAFFFF')
+
+		1.b.5) Informar a cor da fonte que aparecerá no nome da equipe, em hexadecimal, sem o #. Exemplo(,cor_fonte: '000000')
+
+		1.b.6) Certifique-se de estar logado no Trello;
+
+		1.b.7) Acesse o link https://trello.com/app-key
+
+		1.b.8) Copie a Key gerada no passo acima e cole no campo key_trello do nosso config.js. Exemplo(,key_trello: '311c9ad033d2d8f35e6a262b9f0efa95')
+
+		1.b.9) Substitua o texto "SUBSTITUTE_WITH_YOUR_KEY" pela sua Key no link https://trello.com/1/authorize?key=SUBSTITUTE_WITH_YOUR_KEY&name=Burndown+Trello+user&expiration=never&response_type=token
+
+		1.b.10) Peça para o criador do board acessar o link gerado no passo anterior e te passar a token gerada. Esse passo é necessário, mesmo que você seja o criador do board;
+
+		1.b.11) Copie a Token gerada no passo anterior e cole no campo token_trello do nosso config.js. Exemplo(,token_trello: '6181cbb658a27e36dadfc53f2b98ec004eba533ddf240afff49c11359993bf2e')
+
+		1.b.12) Informar a unidade de medida a ser usada no burndown no campo nome_eixo_y. Exemplo(,nome_eixo_y: 'Pontos')
+
+		1.b.13) Informar nome do label do Trello que será utilizado para identificar quais cards devem entrar no burndown no campo nome_label_burndown. Exemplo(,nome_label_burndown: 'BURN')
+
+		1.b.14) Informar nome da lista que deve abater pontos no burndown no campo nome_lista_done. Exemplo(,nome_lista_done: 'Done')
+
+		1.b.15) Salvar documento e sair;
+
+2-) Configurações da Sprint (Alteradas uma vez por Sprint):
+
+	2.a) Configurações do config.js:
+
+		2.a.1) Abrir arquivo config.js com o editor de texto de sua preferência;
+
+		2.a.2) Caso o board da sprint que estamos configurando tenha sido criado por outro usuário, repita os passos de 1.b.9 a 1.b.11;
+
+		2.a.3) Informe a URL completa do board no campo url_trello. Exemplo(url_trello: 'https://trello.com/b/dtuzEVOJ/teste-13-03-20-03')
+
+		2.a.4) Informe a data inicial da sprint no campo data_inicial. Exemplo(,data_inicial: '20/03/2015')
+
+		2.a.5) Informe a data final da sprint no campo data_final. Exemplo(,data_final: '29/03/2015')
+
+		2.a.6) Informe os dias que estão dentro dessa sprint e não possuirão jornada de trabalho, como feriados. Não é necessário informar sábados e domingos. (,dias_sem_jornada: ['24/03/2015', '26/03/2015']). Observação: Se não houver nenhum dia sem jornada durante a sprint, o informado deve ser o seguinte exemplo (,dias_sem_jornada: [])
+
+		2.a.7) Informar o subtítulo do Burndown no campo legenda_burndown. Exemplo(,legenda_burndown: 'Sprint 2'). Observação: Caso não queira nenhum subtítulo no seu burndown, você pode deixar essa linha em branco, ou removê-la;
+
+
+	2.b) Configurações do Trello:
+
+		2.b.1) Para o funcionamento do burndown, é preciso que todos os cards que você deseje dentro do mesmo estejam marcados com um label de qualquer cor, contendo o texto definido no passo 1.b.13;
+
+		2.b.2) Dentre os cards que possuem o label que sinaliza a entrada no burndown, é necessário que todos possuam uma quantidade de pontos previstas. Isso pode ser feito manualmente, colocando essa quantidade entre parênteses antes do título do card, ou também pode ser feito utilizando o plugin "Scrum for trello", presente no Chrome Web Store. Essa á e maneira mais recomendada;
+
+		2.b.3) O board deve possuir uma lista com o nome definido no passo 1.b.14. Essa lista é a que define a linha "Realizado" do burndown;
+
+		2.b.4) Os cards parametrizados com o label inserido no passo 2.b.1 que estiverem na lista definina no passo 2.b.3 devem OBRIGATORIAMENTE possui em seu Due Date a data de conclusão da tarefa descrita no card. Isso é necessário, pois o sistema toma essa base para decidir sobre qual dia o "abaixamento" da linha "Realizado" irá incidir.
+
+		2.b.5) As Due Dates dos cards citados no passo acima devem OBRIGATORIAMENTE estar dentro da sprint, definida nos passos 2.a.4 e 2.a.5. Caso contrário, o programa irá alertá-lo disso e o burndown não será gerado enquanto o problema persistir.
+
+
+Quaisquer dúvidas ou problemas encontrados, procurar o Wilde ou enviar email para wilde.rossi@db1.com.br

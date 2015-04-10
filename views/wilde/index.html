@@ -1,0 +1,44 @@
+<!DOCTYPE HTML>
+<html lang="pt-br">
+	<head>
+		<title>BURNDOWN</title>
+
+		<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+		<link rel="stylesheet" type="text/css" href="style.css">
+		<script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+		<script type="text/javascript" src="http://code.highcharts.com/highcharts.js"></script>
+		<script type="text/javascript" src="animation.js"></script>
+		<script type="text/javascript" src="config.js"></script>
+		<script type="text/javascript" src="script.js"></script>
+	</head>
+	<body>
+		<div id="header">
+			<div id="crew-container">
+				<h1 id="crew-name"></h1>
+			</div>
+		</div>
+		<div id="errorContainer">
+			<div class="close-container">
+				<span class="btn-close" close-target="errorContainer">
+					x
+				</span>
+			</div>			
+			<div id="errorMessages"></div>
+		</div>
+		<div id="content">
+			<a id="link-trello" target="_blank">
+				<div id="burndown-aam" class="burndown"></div>
+				<div id="burndown-imp" class="burndown"></div>
+			</a>				
+		</div>
+		<div id="indicadores-container">
+			<embed id="indicadores" class="indicador" src="http://192.168.199.98:8081/Charts/GetChart?chart=TREETECH_INDICADORES_BURN&query=QRY_TREETECH_INDICADORES"/>
+			<embed id="distribuicao" class="indicador" src="http://192.168.199.98:8081/Charts/GetChart?chart=TREETECH_DSTR_ESFC_BURN&query=QRY_TREETECH_GLOBAL"/>			
+		</div>		
+		<div id="grafico-enorme">
+			<embed id="outros" class="indicador" src="http://192.168.199.98:8081/Charts/GetChart?chart=TREETECH_OUTROS_BURN&query=QRY_TREETECH_OUTROS"/>
+		</div>
+		<div id="grafico-pontos"></div>
+	</body>
+</html>
