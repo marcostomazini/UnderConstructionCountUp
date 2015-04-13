@@ -3,68 +3,13 @@ $(function(){
         refreshPage()
     }, 300000);
 
-	addConfig();
-
     getTrelloData(function(data){
-        console.log(data);
-        var chartData = {
-            aam: {
-                workDays: []
-                ,planned: {
-                    name: 'Previsto',
-                    data: []
-                }
-                ,realized: {
-                    name: 'Realizado',
-                    data: []
-                }
-                ,yAxisName: config.sysConfig.nome_eixo_y
-            }
-
-            ,imp: {
-                workDays: []
-                ,planned: {
-                    name: 'Previsto',
-                    data: []
-                }
-                ,realized: {
-                    name: 'Realizado',
-                    data: []
-                }
-                ,yAxisName: config.sysConfig.nome_eixo_y
-            }
-
-            ,pon: []
-        };
-
-        
-
-        var burndownCards_aam = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_aam); 
-        var burndownCards_imp = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_imp); 
-
-        var somaPontos_aam = getPointsSum(burndownCards_aam);
-        var somaPontos_imp = getPointsSum(burndownCards_imp);
-
-        var workingDays = getWorkDays();
-
-        workingDays.forEach(function(day){
-            chartData.aam.workDays.push(day.toSimpleString());
-            chartData.imp.workDays.push(day.toSimpleString());
-        });
-
-        chartData.aam.planned.data = calculatePlannedPoints(somaPontos_aam, workingDays.length);
-        chartData.imp.planned.data = calculatePlannedPoints(somaPontos_imp, workingDays.length);
+        var chartData = [];
 
         var idDone = getDoneIdList(data.lists);
 
-        var doneCards_aam = getCardsFromList(burndownCards_aam, idDone);
-        var doneCards_imp = getCardsFromList(burndownCards_imp, idDone);
-
-        chartData.aam.realized.data = calculateRealizedPoints(somaPontos_aam, workingDays, doneCards_aam);
-        chartData.imp.realized.data = calculateRealizedPoints(somaPontos_imp, workingDays, doneCards_imp);
-
-        chartData.pon = calculateDonePoints(getCardsFromList(data.cards, idDone), data.members);
-        chartData.pon = dataBeautifier(chartData.pon);
+        chartData = calculateDonePoints(getCardsFromList(data.cards, idDone), data.members);
+        chartData = dataBeautifier(chartData);
 
         addChart(chartData);  // Chama gráfico
     });	
@@ -445,96 +390,22 @@ var getUrlTrelloApi = function(){
     return urlString;
 };
 
-var addConfig = function(){
-    addAnimations();
-    changeCssProperty('body', 'background-color', '#' + config.sysConfig.cor_de_fundo_da_tela);
-	changeCssProperty('#crew-container', 'background-color', '#' + config.sysConfig.cor_de_fundo_do_titulo);
-    changeCssProperty('#crew-name', 'color', '#' + config.sysConfig.cor_fonte);
-    $('#crew-name').append(config.sysConfig.nome_da_equipe);
-    $('#link-trello').attr('href', config.sprintConfig.url_trello);
-};
-
 var changeCssProperty = function(selector, propertyName, propertyValue){
 	$(selector).css(propertyName, propertyValue);
 };
 
 var addChart = function(data){
-	$('#burndown-aam').highcharts({
-        chart: {
-            type: 'line',
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
-        },
-        title: {
-            text: 'Burndown - AAM'
-        },
-        subtitle: {
-            text: config.sprintConfig.legenda_burndown ? config.sprintConfig.legenda_burndown : ''
-        },
-        xAxis: {
-            categories: data.aam.workDays
-        },
-        yAxis: {
-        	min: 0,
-        	minRange: 0.1,
-            title: {
-                text: data.aam.yAxisName
-            }
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: true
-            }
-        },
-        series: [data.aam.realized, data.aam.planned]
-    });
-
-    $('#burndown-imp').highcharts({
-        chart: {
-            type: 'line',
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
-        },
-        title: {
-            text: 'Burndown - Implantação'
-        },
-        subtitle: {
-            text: config.sprintConfig.legenda_burndown ? config.sprintConfig.legenda_burndown : ''
-        },
-        xAxis: {
-            categories: data.imp.workDays
-        },
-        yAxis: {
-            min: 0,
-            minRange: 0.1,
-            title: {
-                text: data.imp.yAxisName
-            }
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: true
-            }
-        },
-        series: [data.imp.realized, data.imp.planned]
-    });
-
-    $('#grafico-pontos').highcharts({
+	$('#grafico-pontos-full').highcharts({
         chart: {
             plotBackgroundColor: null,
             plotBorderWidth: 0,
             plotShadow: false,
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
         },
         title: {
             text: 'Pontos<br>Finalizados',
             align: 'center',
             verticalAlign: 'middle',
-            y: 50
+            y: 100
         },
         tooltip: {
             pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
@@ -554,14 +425,14 @@ var addChart = function(data){
                 startAngle: -90,
                 endAngle: 90,
                 center: ['50%', '75%'],
-                size: '1000px'
+                size: '950px'
             }
         },
         series: [{
             type: 'pie',
             name: 'Pontos Finalizados',
             innerSize: '50%',
-            data: data.pon
+            data: data
         }]
     });
 };

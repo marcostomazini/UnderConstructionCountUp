@@ -3,68 +3,39 @@ $(function(){
         refreshPage()
     }, 300000);
 
-	addConfig();
-
     getTrelloData(function(data){
-        console.log(data);
-        var chartData = {
-            aam: {
-                workDays: []
-                ,planned: {
-                    name: 'Previsto',
-                    data: []
-                }
-                ,realized: {
-                    name: 'Realizado',
-                    data: []
-                }
-                ,yAxisName: config.sysConfig.nome_eixo_y
+        var chartData = {            
+            workDays: []
+            ,planned: {
+                name: 'Previsto',
+                data: []
             }
-
-            ,imp: {
-                workDays: []
-                ,planned: {
-                    name: 'Previsto',
-                    data: []
-                }
-                ,realized: {
-                    name: 'Realizado',
-                    data: []
-                }
-                ,yAxisName: config.sysConfig.nome_eixo_y
+            ,realized: {
+                name: 'Realizado',
+                data: []
             }
-
-            ,pon: []
+            ,yAxisName: config.sysConfig.nome_eixo_y            
         };
 
         
 
-        var burndownCards_aam = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_aam); 
-        var burndownCards_imp = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_imp); 
+        var burndownCards = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_aam); 
 
-        var somaPontos_aam = getPointsSum(burndownCards_aam);
-        var somaPontos_imp = getPointsSum(burndownCards_imp);
+        var somaPontos = getPointsSum(burndownCards);
 
         var workingDays = getWorkDays();
 
         workingDays.forEach(function(day){
-            chartData.aam.workDays.push(day.toSimpleString());
-            chartData.imp.workDays.push(day.toSimpleString());
+            chartData.workDays.push(day.toSimpleString());
         });
 
-        chartData.aam.planned.data = calculatePlannedPoints(somaPontos_aam, workingDays.length);
-        chartData.imp.planned.data = calculatePlannedPoints(somaPontos_imp, workingDays.length);
+        chartData.planned.data = calculatePlannedPoints(somaPontos, workingDays.length);
 
         var idDone = getDoneIdList(data.lists);
 
-        var doneCards_aam = getCardsFromList(burndownCards_aam, idDone);
-        var doneCards_imp = getCardsFromList(burndownCards_imp, idDone);
+        var doneCards = getCardsFromList(burndownCards, idDone);
 
-        chartData.aam.realized.data = calculateRealizedPoints(somaPontos_aam, workingDays, doneCards_aam);
-        chartData.imp.realized.data = calculateRealizedPoints(somaPontos_imp, workingDays, doneCards_imp);
-
-        chartData.pon = calculateDonePoints(getCardsFromList(data.cards, idDone), data.members);
-        chartData.pon = dataBeautifier(chartData.pon);
+        chartData.realized.data = calculateRealizedPoints(somaPontos, workingDays, doneCards);
 
         addChart(chartData);  // Chama gráfico
     });	
@@ -212,27 +183,10 @@ var calculateRealizedPoints = function(points, days, doneCards){
     var dayPoints;
     var buffer;
 
-    var msgPosteriorMostrada = false;
-    var msgAnteriorMostrada = false;
     for (var i = 0 ; i < doneCards.length ; i++){
-        if (new Date(doneCards[i].due) < days[0]){
-            if (!msgAnteriorMostrada){
-                $('#errorMessages').append('<p>Existem apontamentos de Due Date na lista "' + config.sysConfig.nome_lista_done + '" com data anterior ao primeiro dia útil da sprint. Esses pontos foram atribuídos ao primeiro dia da sprint.</p>');
-                msgAnteriorMostrada = true; // mensagem mostrada somente uma vez
-                $('#errorContainer').slideDown('slow');
-            }
-            doneCards[i].due = days[0]; // Movimenta para o primeiro dia
-            
-        }
-        if (new Date(doneCards[i].due) > days[days.length - 1].tomorrow()){
-            if (!msgPosteriorMostrada){
-                $('#errorMessages').append('<p>Existem apontamentos de Due Date na lista "' + config.sysConfig.nome_lista_done + '" com data posterior ao último dia útil da sprint. Esses pontos foram atribuídos ao último dia da sprint.</p>');
-                msgPosteriorMostrada = true; // mensagem mostrada somente uma vez
-
-                $('#errorContainer').slideDown('slow');
-            }
-            // Se cair nesse caso, o getTargetDay já movimenta para o último dia útil automaticamente (recursivo).
-        }
+        if (new Date(doneCards[i].due) < days[0]){            
+            doneCards[i].due = days[0]; // Movimenta para o primeiro dia            
+        }        
     }
 
    
@@ -446,7 +400,6 @@ var getUrlTrelloApi = function(){
 };
 
 var addConfig = function(){
-    addAnimations();
     changeCssProperty('body', 'background-color', '#' + config.sysConfig.cor_de_fundo_da_tela);
 	changeCssProperty('#crew-container', 'background-color', '#' + config.sysConfig.cor_de_fundo_do_titulo);
     changeCssProperty('#crew-name', 'color', '#' + config.sysConfig.cor_fonte);
@@ -459,10 +412,9 @@ var changeCssProperty = function(selector, propertyName, propertyValue){
 };
 
 var addChart = function(data){
-	$('#burndown-aam').highcharts({
+	$('#burndown').highcharts({
         chart: {
-            type: 'line',
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
+            type: 'line'
         },
         title: {
             text: 'Burndown - AAM'
@@ -471,13 +423,13 @@ var addChart = function(data){
             text: config.sprintConfig.legenda_burndown ? config.sprintConfig.legenda_burndown : ''
         },
         xAxis: {
-            categories: data.aam.workDays
+            categories: data.workDays
         },
         yAxis: {
         	min: 0,
         	minRange: 0.1,
             title: {
-                text: data.aam.yAxisName
+                text: data.yAxisName
             }
         },
         plotOptions: {
@@ -488,80 +440,6 @@ var addChart = function(data){
                 enableMouseTracking: true
             }
         },
-        series: [data.aam.realized, data.aam.planned]
-    });
-
-    $('#burndown-imp').highcharts({
-        chart: {
-            type: 'line',
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
-        },
-        title: {
-            text: 'Burndown - Implantação'
-        },
-        subtitle: {
-            text: config.sprintConfig.legenda_burndown ? config.sprintConfig.legenda_burndown : ''
-        },
-        xAxis: {
-            categories: data.imp.workDays
-        },
-        yAxis: {
-            min: 0,
-            minRange: 0.1,
-            title: {
-                text: data.imp.yAxisName
-            }
-        },
-        plotOptions: {
-            line: {
-                dataLabels: {
-                    enabled: true
-                },
-                enableMouseTracking: true
-            }
-        },
-        series: [data.imp.realized, data.imp.planned]
-    });
-
-    $('#grafico-pontos').highcharts({
-        chart: {
-            plotBackgroundColor: null,
-            plotBorderWidth: 0,
-            plotShadow: false,
-            backgroundColor: '#' + config.sysConfig.cor_de_fundo_da_tela
-        },
-        title: {
-            text: 'Pontos<br>Finalizados',
-            align: 'center',
-            verticalAlign: 'middle',
-            y: 50
-        },
-        tooltip: {
-            pointFormat: '{series.name}: <b>{point.percentage:.1f}%</b>'
-        },
-        plotOptions: {
-            pie: {
-                dataLabels: {
-                    enabled: true,
-                    distance: -50,
-                    style: {
-                        fontWeight: 'bold',
-                        color: 'white',
-                        textShadow: '0px 1px 2px black',
-                        "font-size": "20px"
-                    }
-                },
-                startAngle: -90,
-                endAngle: 90,
-                center: ['50%', '75%'],
-                size: '1000px'
-            }
-        },
-        series: [{
-            type: 'pie',
-            name: 'Pontos Finalizados',
-            innerSize: '50%',
-            data: data.pon
-        }]
+        series: [data.realized, data.planned]
     });
 };
