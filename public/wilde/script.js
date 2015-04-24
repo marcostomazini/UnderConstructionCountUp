@@ -72,6 +72,7 @@ $(function(){
         chartData.pon = dataBeautifier(chartData.pon);
 
         addChart(chartData);  // Chama gráfico
+        chamaPizzaiolo(data);
     });	
 });
 
@@ -386,7 +387,7 @@ var getTrelloData = function(callback){
 
 var getUrlTrelloApi = function(){
     var board_id = config.sprintConfig.url_trello.split('/')[4];
-    var urlString = "https://api.trello.com/1/board/"+ board_id +"?key="+ config.sysConfig.key_trello +"&cards=visible&lists=open&members=all&member_fields=fullName&token=" + config.sysConfig.token_trello
+    var urlString = "https://api.trello.com/1/board/"+ board_id +"?key="+ config.sysConfig.key_trello +"&cards=visible&card_checklists=all&lists=open&members=all&member_fields=fullName&token=" + config.sysConfig.token_trello
     return urlString;
 };
 

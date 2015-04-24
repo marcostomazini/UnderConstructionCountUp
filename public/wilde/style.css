@@ -137,3 +137,8 @@ body {
 	width: inherit;
 	height: inherit;
 }
+
+#pizzas {
+	margin: 0 auto;
+	width: 90%;
+}
