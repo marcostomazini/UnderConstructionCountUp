@@ -4,7 +4,7 @@ $(function(){
     }, 300000);
 
     getTrelloData(function(data){
-        var chartData = {            
+        var chartData = {
             workDays: []
             ,planned: {
                 name: 'Previsto',
@@ -14,18 +14,25 @@ $(function(){
                 name: 'Realizado',
                 data: []
             }
-            ,yAxisName: config.sysConfig.nome_eixo_y            
+            ,yAxisName: config.sysConfig.nome_eixo_y
+            
         };
 
         
 
-        var burndownCards = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_aam); 
+        var burndownCards = getBurndownCards(data.cards, config.sysConfig.nome_label_burndown_aam);
 
         var somaPontos = getPointsSum(burndownCards);
 
-        var workingDays = getWorkDays();
+        var days = getDays();
+        var workingDays = days.filter(function(day){
+            return day.work;
+        });
 
-        workingDays.forEach(function(day){
+
+        workingDays.map(function(day){
+            return day.day;
+        }).forEach(function(day){
             chartData.workDays.push(day.toSimpleString());
         });
 
@@ -38,116 +45,8 @@ $(function(){
         chartData.realized.data = calculateRealizedPoints(somaPontos, workingDays, doneCards);
 
         addChart(chartData);  // Chama gráfico
-    });	
+    }); 
 });
-
-var dataBeautifier = function(data){
-    retorno = data;
-    retorno.forEach(function(member){
-        if (member.y !== 0){
-
-            member.dataLabels.enabled = true;
-
-            switch (member.name){
-                case "André Moraes":
-                    member.name = "André";
-                    break;
-                case "Cléber Ferreira":
-                    member.name = "Cléber";
-                    break;
-                case "Edoil R. de Barros":
-                    member.name = "Edoil";
-                    break;
-                case "Elisiani Angelim":
-                    member.name = "Elisiani";
-                    break;
-                case "Gabriel Capoia":
-                    member.name = "Capoia";
-                    break;
-                case "HEIDER DE FIGUEREDO":
-                    member.name = "Heider";
-                    break;
-                case "Luciane Baldo Nicolodi":
-                    member.name = "Luciane";
-                    break;
-                case "Luis Gustavo Uzai":
-                    member.name = "Uzai";
-                    break;
-                case "Marco Diniz":
-                    member.name = "Marco";
-                    break;
-                case "Mary Provinciatto":
-                    member.name = "Mary";
-                    break;
-                case "Regis Ranniere":
-                    member.name = "Ranniere";
-                    break;
-                case "Ricardo Aleixo":
-                    member.name = "Ricardo";
-                    break;
-                case "Rodrigo F. Fernandes":
-                    member.name = "Rodrigo";
-                    break;
-                case "Wilde":
-                    member.name = "Wilde";
-                    break;
-                case "marcos tomazini":
-                    member.name = "Tomazini";
-                    break;                
-            }
-
-            member.name += ": " + member.y;
-
-        }
-
-
-    });
-
-    return retorno;
-};
-
-var calculateDonePoints = function(cards, members){
-    var retorno = membersInitialize(members);
-    cards.forEach(function(card){
-        if (card.labels.containsName(config.sysConfig.nome_label_burndown_aam) || card.labels.containsName(config.sysConfig.nome_label_burndown_imp)){
-            retorno.forEach(function(member){
-                if (member.id === card.idMembers[0]){
-                    member.y += card.name.getPoints();
-                }
-            });
-        }
-    });
-
-    return retorno;
-};
-
-var membersInitialize = function(members){
-    var retorno = [];
-    members.forEach(function(member){
-        retorno.push({
-            id: member.id,
-            name: member.fullName,
-            y: 0.0,
-            dataLabels: {
-                enabled: false,
-            }
-        });
-    });
-    return retorno;
-};
-
-var getPointsSum = function(cards){
-
-    var soma = 0.0;
-    var buffer;
-    for (var i = 0; i < cards.length; i++){
-        buffer = cards[i].name.getPoints();
-        if (buffer !== NaN){
-            soma += buffer;
-        }
-    }
-    return soma;
-};
 
 var refreshPage = function(){
     window.location.reload(true);
@@ -177,64 +76,114 @@ var getCardsFromList = function(burndownCards, idList){
     return retorno;
 };
 
-var calculateRealizedPoints = function(points, days, doneCards){
-    var retorno = [];
-    var remainingPoints = points;
-    var dayPoints;
-    var buffer;
 
-    for (var i = 0 ; i < doneCards.length ; i++){
-        if (new Date(doneCards[i].due) < days[0]){            
-            doneCards[i].due = days[0]; // Movimenta para o primeiro dia            
-        }        
+var checkCardsBeforeRange = function(cards, date){ // Joga todos os cards em Done com data anterior ao início útil da sprint para o primeiro dia útil
+    var returnCards = cards;
+    var outOfRange = returnCards.some(function(card){
+        return card.due < date;
+    });
+
+    if (outOfRange){
+        returnCards.filter(function(card){
+            return card.due < date;
+        }).forEach(function(card){ 
+            card.due = date;
+        });
     }
 
-   
+    return returnCards;
+};
 
-    for (var i = 0 ; i < days.length ; i++){
-        if (days[i].equals(nextDayInArray(days))){
-            break;
-        }
-        dayPoints = 0.0;
-        doneCards.forEach(function(card){
-            if (days[i].equals(getTargetDay(new Date(card.due), days))){
-                dayPoints += card.name.getPoints();
+var checkCardsAfterRange = function(cards, date){ // Joga todos os cards em Done com data posterior ao final útil da sprint para o último dia útil
+    var returnCards = cards;
+    var outOfRange = returnCards.some(function(card){
+        return card.due > date;
+    });
+
+    if (outOfRange){
+        returnCards.filter(function(card){
+            return card.due > date;
+        }).forEach(function(card){ 
+            card.due = date;
+        });
+    }
+
+    return returnCards;
+};
+
+var checkNotWorkingDays = function(cards, days){ // Joga os cards de dias sem jornada para o dia de trabalho anterior (caso haja) ou posterior.
+    var returnCards = cards;
+
+    var workDays = days.filter(function(day){ 
+            return day.work;
+        }).map(function(day){
+            return day.day;
+        });
+
+    var dayIterator;
+    returnCards.forEach(function(card){
+        days.forEach(function(day){
+            if (!day.work && card.due.equals(day.day)){ // Se o card for de dia sem trabalho
+                dayIterator = $.inArray(day, days);
+                while (!days[dayIterator].work){
+                    dayIterator--;
+                }
+                card.due = days[dayIterator].day;
             }
         });
-        remainingPoints -= dayPoints;
-        buffer = parseFloat(remainingPoints.toFixed(2));
-        retorno.push(buffer);
-    } 
-
-    return retorno;
-
+    });
+    return returnCards;
 };
 
-var getTargetDay = function(targetDay, days){    
-    var retorno;
-
-    for (var i = 0 ; i < days.length ; i++){
-        if (days[i].equals(targetDay)){
-            retorno = days[i];
-            return retorno;
+var getPointsSum = function(cards){
+    var soma = 0.0;
+    var buffer;
+    for (var i = 0; i < cards.length; i++){
+        buffer = cards[i].name.getPoints();
+        if (buffer !== NaN){
+            soma += buffer;
         }
     }
-    return getTargetDay(targetDay.yesterday(), days);
+    return soma;
 };
 
+var calculateRealizedPoints = function(points, days, doneCards){
+    var realizedPoints = [];
+    var remainingPoints = points;
+    var dayPoints;
+    var workDays = days.filter(function(day){ 
+            return day.work;
+        }).map(function(day){
+            return day.day;
+        });
 
-var nextDayInArray = function(days){
-    for (var i = 0; i < days.length ; i++){
-        if (days[i].equals(new Date())){
-            if (days[i + 1] !== undefined){
-                return days[i + 1];
-            } else {
-                return new Date();
-            }
+    doneCards.forEach(function(card){ // Normaliza cards para meia noite (ignorando a hora nas comparações)
+        card.due = new Date(card.due).toMidnight();
+    });
+
+    doneCards = checkCardsBeforeRange(doneCards, workDays[0]);
+    doneCards = checkCardsAfterRange(doneCards, workDays[workDays.length - 1]);
+    doneCards = checkNotWorkingDays(doneCards, days);
+
+
+    workDays.forEach(function(day){
+        if (day <= new Date().toMidnight()){
+            doneCards.filter(function(card){
+                return card.due.equals(day);
+            }).forEach(function(card){
+                remainingPoints -= card.name.getPoints();
+            });            
+            realizedPoints.push(
+                parseFloat(remainingPoints.toFixed(2))
+            );            
+        } else {
+            return;
         }
-    }
-    return new Date();
-}
+    });
+
+    return realizedPoints;
+};
+
 
 var getBurndownCards = function(allCards, label_burn){
     retorno = [];
@@ -248,6 +197,7 @@ var getBurndownCards = function(allCards, label_burn){
 
     return retorno;
 };
+
 
 var calculatePlannedPoints = function(points, days){
     var retorno = [];
@@ -274,6 +224,10 @@ Array.prototype.containsName = function(name){
         }
     });
     return retorno;
+};
+
+Date.prototype.toMidnight = function(){
+    return new Date(this.setHours(0, 0, 0));
 };
 
 Date.prototype.equals = function(date){
@@ -350,37 +304,40 @@ var stringToDate = function(date){ // Parâmetro no formato DD/MM/YYYY
 
 
 
-var isWorkDay = function(date, notWorkingDays){  // Verifica se o parâmetro date é um dia com jornada de trabalho
+var isWorkDay = function(date, holidays){  // Verifica se o parâmetro date é um dia com jornada de trabalho
     if (date.getDay() === 0 || date.getDay() === 6){ // Checa Domingo ou Sábado
         return false;
     }
-
-    for (var i = 0; i < notWorkingDays.length; i++){ // Checa dias sem jornada do parâmetro
-        if (date.equals(notWorkingDays[i])){
-            return false;
-        }
-    }
-
-    return true;
+    return !holidays.some(function(holiday){
+        return date.equals(holiday);
+    });
 };
 
-var getWorkDays = function(){
-    var workDays = [];
-    var notWorkingDays = [];
-    config.sprintConfig.dias_sem_jornada.forEach(function(day){
-        notWorkingDays.push(stringToDate(day));
+var getHolidays = function(){
+    holidays = [];
+    config.sprintConfig.dias_sem_jornada.forEach(function(diaSemJornada){
+        holidays.push(stringToDate(diaSemJornada));
     });
+    return holidays;
+}
 
+var getDays = function(){
+    var days = [];
     var dayIterator = stringToDate(config.sprintConfig.data_inicial);
     var finalDate = stringToDate(config.sprintConfig.data_final);
+    var holidays = getHolidays();
+
+
 
     while (dayIterator - finalDate <= 0){
-        if (isWorkDay(dayIterator, notWorkingDays)){
-            workDays.push(dayIterator);            
-        }      
-        dayIterator = dayIterator.tomorrow();  
+        days.push({
+            day: dayIterator,
+            work: isWorkDay(dayIterator, holidays)
+        });
+
+        dayIterator = dayIterator.tomorrow();
     }
-    return workDays;
+    return days;
 }
 
 
@@ -399,20 +356,13 @@ var getUrlTrelloApi = function(){
     return urlString;
 };
 
-var addConfig = function(){
-    changeCssProperty('body', 'background-color', '#' + config.sysConfig.cor_de_fundo_da_tela);
-	changeCssProperty('#crew-container', 'background-color', '#' + config.sysConfig.cor_de_fundo_do_titulo);
-    changeCssProperty('#crew-name', 'color', '#' + config.sysConfig.cor_fonte);
-    $('#crew-name').append(config.sysConfig.nome_da_equipe);
-    $('#link-trello').attr('href', config.sprintConfig.url_trello);
-};
 
 var changeCssProperty = function(selector, propertyName, propertyValue){
-	$(selector).css(propertyName, propertyValue);
+    $(selector).css(propertyName, propertyValue);
 };
 
 var addChart = function(data){
-	$('#burndown').highcharts({
+    $('#burndown').highcharts({
         chart: {
             type: 'line'
         },
@@ -426,8 +376,8 @@ var addChart = function(data){
             categories: data.workDays
         },
         yAxis: {
-        	min: 0,
-        	minRange: 0.1,
+            min: 0,
+            minRange: 0.1,
             title: {
                 text: data.yAxisName
             }
