@@ -22,6 +22,10 @@ define([
                     templateUrl: 'partials/home',
                     controller: 'HomeCtrl'
                 }).
+                when('/updating', {
+                    templateUrl: 'updating',
+                    controller: 'UpdateCtrl'
+                }).
                 otherwise({
                     redirectTo: '/home'
                 });
@@ -33,7 +37,7 @@ define([
 
             if (nextRoute.access===undefined) {
                 $location.path("/home");
-	    }
+	        }
         });
     }]);
 

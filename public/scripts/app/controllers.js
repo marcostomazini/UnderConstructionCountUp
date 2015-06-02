@@ -17,6 +17,12 @@ define(['angular'], function (angular) {
         }
     ]);
 
+    mainAppControllers.controller('UpdateCtrl', ['$scope', '$http', '$interval',
+        function ($scope, $http,$interval) {
+            
+        }
+    ]);
+
     mainAppControllers.controller('HomeCtrl', ['$scope', '$http', '$interval',
         function ($scope, $http,$interval) {
             $scope.isError = false;

@@ -4,6 +4,10 @@ module.exports = function(app) {
         res.render('index');
     });
 
+    app.get('/updating', function(req, res){
+        res.render('updating');
+    });
+
 	app.get('/burndown', function(req, res){
         res.render('wilde/index');
     });
