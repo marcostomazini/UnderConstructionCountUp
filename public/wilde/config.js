@@ -1,15 +1,15 @@
 var config = {
 	sprintConfig: {
 
-		url_trello: 'https://trello.com/b/bS4cQxde/treetech-op-fase-2-sprint-8-xxxx-19-05-a-02-06-xx-x-pontos'
+		url_trello: 'https://trello.com/b/0x7QO6Uj/treetech-op-fase-2-sprint-9-2222-02-06-a-16-06-xx-x-pontos'
 
-		,data_inicial: '19/05/2015' // Data de início da sprint (dia 0)
+		,data_inicial: '02/06/2015' // Data de início da sprint (dia 0)
 
-		,data_final: '02/06/2015'   // Data de fechamento da sprint
+		,data_final: '16/06/2015'   // Data de fechamento da sprint
 
-		,dias_sem_jornada: []       // Dias sem jornada de trabalho (exemplo: feriados), Não é necessário informar sábados e domingos.
+		,dias_sem_jornada: ['04/06/2015']       // Dias sem jornada de trabalho (exemplo: feriados), Não é necessário informar sábados e domingos.
 
-		,legenda_burndown: 'Sprint 8'
+		,legenda_burndown: 'Sprint 9'
 
 	}
 	,sysConfig: {
